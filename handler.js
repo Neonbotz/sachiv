@@ -988,7 +988,7 @@ global.dfail = (type, m, conn) => {
         mods: '*❕FITUR DI TOLAK* \nPerintah ini hanya dapat digunakan oleh _*Moderator*_ !',
         premium: '*❕FITUR DI TOLAK❕*\n*Premium*\n1 Months *IDR 5000*\nHubungi *owner* kami..', 
         banned: '*❕FITUR DI TOLAK❕*\nPerintah ini hanya untuk pengguna yang terbanned..',
-        group: '*❕FITUR DI TOLAK❕*\nPerintah ini hanya dapat digunakan di grup!\nhttps://chat.whatsapp.com/EwZwsftTehZ9ahjt2mvj37',
+        group: '*❕FITUR DI TOLAK❕*\nPerintah ini hanya dapat digunakan di grup!\nhttps://chat.whatsapp.com/GCdOpqHM3arKrMa6103EzR',
         private: '*❕FITUR DI TOLAK❕*\nPerintah ini hanya dapat digunakan di Chat Pribadi!',
         admin: '*❕FITUR DI TOLAK❕*\nPerintah ini hanya untuk *Admin* grup!',
         botAdmin: '*❕FITUR DI TOLAK❕*\nJadikan bot sebagai *Admin* untuk menggunakan perintah ini!',
