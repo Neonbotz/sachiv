@@ -5,33 +5,35 @@ let fetch = require('node-fetch')
 let moment = require('moment-timezone')
 let levelling = require('../lib/levelling')
 let tags = {
-  'rpgabsen': 'Rpg-Absen',
-  'rpg': 'Rpg',
-  'game': 'Game',
-  'xp': 'Exp, Limit & Pay',
-  'sticker': 'Sticker',
-  'main': 'Main',
-  'kerang': 'Kerang Ajaib',
-  'quotes': 'Quotes',
-  'admin': 'Admin',
-  'group': 'Group',
-  'internet': 'Internet',
-  'anonymous': 'Anonymous Chat',
-  'downloader': 'Downloader',
-  'berita': 'Berita',
-  'tools': 'Tools',
-  'fun': 'Fun',
-  'database': 'Database', 
-  'vote': 'Voting',
-  'absen': 'Absen',
-  'catatan': 'Catatan',
-  'jadian': 'Jadian',
-  'islami': 'Islami',
-  'owner': 'Owner',
-  'advanced': 'Advanced',
-  'info': 'Info',
-  'audio': 'Audio',
-  'maker': 'Maker',
+  'main': '*_Main_*',
+  'rpgabsen': '*_Rpg-Absen_*',
+  'rpg': '*_Rpg_*',
+  'game': '*_Game_*',
+  'xp': '*_Exp, Limit & Pay_*',
+  'sticker': '*_Sticker_*',
+  'randon': '*_Random_*',
+  'kerang': '*_Kerang Ajaib_*',
+  'quotes': '*_Quotes_*',
+  'admin': '*_Admin_*',
+  'group': '*_Group_*',
+  'internet': '*_Internet_*',
+  'anonymous': '*_Anonymous Chat_*',
+  'downloader': '*_Downloader_*',
+  'berita': '*_Berita_*',
+  'tools': '*_Tools_*',
+  'fun': '*_Fun_*',
+  'database': '*_Database_*', 
+  'vote': '*_Voting_*',
+  'absen': '*_Absen_*',
+  'catatan': '*_Catatan_*',
+  'jadian': '*_Jadian_*',
+  'islami': '*_Islami_*',
+  'owner': '*_Owner_*',
+  'advanced': '*_Advanced_*',
+  'info': '*_Info_*',
+  'audio': '*_Audio_*',
+  'maker': '*_Maker_*',
+  '18+': '*_18+_*',
 }
 const defaultMenu = {
   before: `
@@ -44,16 +46,17 @@ Hai, %ucapan %name! 👋
 *Hari:* %week
 *Tanggal:* %date
 *Uptime:* %uptime (%muptime)
+*User:* %totalreg
 
 *Limit:* %limit
 *Level:* %level
 *XP:* %exp
-%readmore`.trimStart(),
-  header: '  ❴ %category ❵',
-  body: '┋➩ %cmd %islimit %isPremium',
-  footer: '┗━━━━━━━━\n',
+`.trimStart(),
+  header: ' %category',
+  body: ' » %cmd %islimit %isPremium',
+  footer: '\n',
   after: `*Made by ♡*
-*%npmname* | %version
+*Sachi Bot * | %version
 ${'```%npmdesc```'}
 `,
 }
@@ -156,40 +159,24 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       level, limit, name, weton, week, date, dateIslamic, wib, wit, wita, time, totalreg, rtotalreg, role,
       readmore: readMore
     }
+    
     text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
-     await conn.relayMessage(m.chat,  {
-    requestPaymentMessage: {
-      currencyCodeIso4217: 'USD',
-      amount1000: 9999,
-      requestFrom: m.sender,
-      noteMessage: {
-      extendedTextMessage: {
-      text: text.trim(),
-      contextInfo: {
-      externalAdReply: {
-      showAdAttribution: true
-      }}}}}}, {})
-   // conn.sendHydrated(m.chat, text.trim(), wm, 'https://telegra.ph/file/a03d4042a1978f1f9c6c0.jpg', 'https://rpgbotz.blogspot.com', 'script & Website', null, null, [['Owner', '.owner'], ['Donasi', '.Donasi'], ['Group Bot', '.gcbot']], m, { asLocation: true })
-    /*conn.sendHydrated(m.chat, text.trim(), 'Ⓟ premium | Ⓛ limit', null, 'https://chat.whatsapp.com/L3lV0py8tZzKtwvzLZd1Rz', 'Group Bot', '', '', [
-      ['Donate', '/donasi'],
-      ['Sewa Bot', '/sewa'],
-      ['Owner', '/owner']
-    ], m)*/
-   /* let url = `https://telegra.ph/file/fa1e58984e645217715ed.jpg`.trim()
+   conn.send2ButtonLoc(m.chat, 'https://telegra.ph/file/fa78be3d0c23707ae369c.jpg', text, 'Ⓟ premium | Ⓛ limit', '0wner', 'owner', 'Sewa Bot', '.sewa', m)
+      /*conn.sendButton(m.chat, text.trim(), 'Ⓟ premium | Ⓛ limit\n jangan lupa bernafas >_<', 'https://telegra.ph/file/eefc0aa7947551f177703.jpg', [['Owner', '.owner'],['Sewa', '.sewa']], null, { asLocation: true })
+    /*let url = `https://telegra.ph/file/ab1df70dfd5c2bac64da1.jpg`.trim()
     let res = await fetch(url)
     let buffer = await res.buffer()
     let message = await prepareWAMessageMedia({ image: buffer }, { upload: conn.waUploadToServer })
                 const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
                     templateMessage: {
                         hydratedTemplate: {
-                             locationMessage: { 
-                             jpegThumbnail: fs.readFileSync('./media/PP.jpg') }, 
+                            imageMessage: message.imageMessage,
                             hydratedContentText: text.trim(),
                             hydratedFooterText:'Ⓟ premium | Ⓛ limit',
                             hydratedButtons: [{
                                 urlButton: {
-                                    displayText: 'Script Dan website',
-                                    url: 'https://rpgbotz.blogspot.com',
+                                    displayText: 'Website',
+                                    url: 'https://Ainebot.github.io/'
                                 }
                             }, {
                                 quickReplyButton: {
@@ -198,9 +185,9 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
                                 }
                             }, {
                                 quickReplyButton: {
-                                    displayText: 'Group Bot',
-                                    id: '/gcbot'
-                                }
+                                    displayText: 'Sewa',
+                                    id: '/sewa'
+                                }  
                             }, {
                                 quickReplyButton: {
                                     displayText: 'Owner',
