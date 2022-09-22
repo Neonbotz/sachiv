@@ -42,8 +42,8 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 const spack = fs.readFileSync("lib/exif.json")
 const stickerpack = JSON.parse(spack)
 if (stickerpack.spackname == '') {
-  var sticker_name = 'Emilia'
-  var sticker_author = 'BotWhatsapp'
+  var sticker_name = 'Sachi Bot ♡︎'
+  var sticker_author = 'By Agungx Devs ⍟'
 } else {
   var sticker_name = stickerpack.spackname
   var sticker_author = stickerpack.sauthor
@@ -60,12 +60,12 @@ fs.watchFile(file_exif, () => {
 // Sticker WM
 global.packname = sticker_name
 global.author = sticker_author
-global.wm = '© Emilia BotWhatsapp'
+global.wm = '© Sachi Bot Whatsapp ♡︎'
 global.wait = '_*𝐬𝐞𝐝𝐚𝐧𝐠 𝐝𝐢 𝐩𝐫𝐨𝐬𝐞𝐬 ...*_'
 global.cewe ='https://telegra.ph/file/ff31af4f1c7b5cda7022e.jpg'
 global.pp = 'https://telegra.ph/file/b5a05c394479627d89a95.jpg'
 global.indo = 'https://telegra.ph/file/f7bcf9eeb565683800cf7.jpg'
-global.instagram = 'https://instagram.com/FirdRay_FF'
+global.instagram = 'https://instagram.com/yt.agungxx'
 global.gc = 'https://chat.whatsapp.com/Gv3TXFpZSJSH6msPeqZQw3'
 global.multiplier = 1000 // The higher, The harder levelup
 
