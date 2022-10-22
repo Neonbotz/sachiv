@@ -2,25 +2,23 @@ const simple = require('./lib/simple')
 const util = require('util')
 const { color } = require('./lib/color')
 const moment = require("moment-timezone")
+const { default: fetch } = require('node-fetch')
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, ms))
 
 module.exports = {
     async handler(chatUpdate) {
-        if (db.data == null) await loadDatabase()
+        if (global.db.data == null) await loadDatabase()
         this.msgqueque = this.msgqueque || []
         // console.log(chatUpdate)
         if (!chatUpdate) return
         this.pushMessage(chatUpdate.messages).catch(console.error)
         // if (!(chatUpdate.type === 'notify' || chatUpdate.type === 'append')) return
         let m = chatUpdate.messages[chatUpdate.messages.length - 1]
+        global.fkontak = global.fkontak
         if (!m) return
         // console.log(m)
-        const Tnow = (new Date()/1000).toFixed(0)
-        const seli = Tnow - m.messageTimestamp
-        if (seli > global.Intervalmsg) return console.log(new ReferenceError(`Pesan ${Intervalmsg} detik yang lalu diabaikan agar tidak nyepam`))
-
         try {
             m = simple.smsg(this, m) || m
             if (!m) return
@@ -28,8 +26,8 @@ module.exports = {
             m.exp = 0
             m.limit = false
             try {
-                let user = db.data.users[m.sender]
-                if (typeof user !== 'object') db.data.users[m.sender] = {}
+                let user = global.db.data.users[m.sender]
+                if (typeof user !== 'object') global.db.data.users[m.sender] = {}
                 if (user) {
                     if (!isNumber(user.exp)) user.exp = 0
                     if (!isNumber(user.limit)) user.limit = 1000
@@ -48,7 +46,6 @@ module.exports = {
                     if (!('pasangan' in user)) user.pasangan = ''
                     if (!('banned' in user)) user.banned = false
                     if (!('premium' in user)) user.premium = false
-                    if (!('created' in user)) user.created = false
                     if (!isNumber(user.premiumDate)) user.premiumDate = 0
                     if (!isNumber(user.bannedDate)) user.bannedDate = 0
                     if (!isNumber(user.warn)) user.warn = 0
@@ -64,7 +61,6 @@ module.exports = {
                     if (!isNumber(user.healtmonster)) user.healtmonster = 0
                     if (!isNumber(user.pc)) user.pc = 0
                     if (!isNumber(user.spammer)) user.spammer = 0
-                    if (!isNumber(user.limitspam)) user.limitspam = 0
                     if (!isNumber(user.expg)) user.expg = 0
                     if (!isNumber(user.trash)) user.trash = 0
                     if (!isNumber(user.sampah)) user.sampah = 0
@@ -276,18 +272,16 @@ module.exports = {
                     if (!isNumber(user.lastmonthly)) user.lastmonthly = 0
                     if (!isNumber(user.lastmulung)) user.lastmulung = 0
                     if (!isNumber(user.lastdagang)) user.lastdagang = 0
-                    if (!isNumber(user.lastbisnis)) user.lastbisnis = 0
                     if (!isNumber(user.lastnebang)) user.lastnebang = 0
                     if (!isNumber(user.lastberkebon))user.lastberkebon = 0
                     if (!isNumber(user.lastadventure)) user.lastadventure = 0
-                    if (!isNumber(user.lastlawan)) user.lastlawan = 0
-                    if (!isNumber(user.lastlatih)) user.lastlatih = 0
-                } else db.data.users[m.sender] = {
+                    if (!isNumber(user.antispam)) user.antispam = 0
+                    if (!isNumber(user.antispamlastclaim)) user.antispamlastclaim = 0
+                } else global.db.data.users[m.sender] = {
                     exp: 0,
                     limit: 1000,
                     joinlimit: 1,
                     spammer: 0,
-                    limitspam: 0,
                     money: 10000,
                     bank: 10000,
                     health: 100,
@@ -304,7 +298,6 @@ module.exports = {
                     pasangan: '',
                     banned: false,
                     premium: false,
-                    created: false,
                     warn: 0,
                     pc: 0,
                     expg: 0,
@@ -331,6 +324,8 @@ module.exports = {
                     mangga: 0,
                     jeruk: 0,
                     apel: 0,
+                    antispam: 0,
+                    antispamlastclaim: 0,
                     bibitpisang: 0,
                     bibitanggur: 0,
                     bibitmangga: 0,
@@ -521,15 +516,12 @@ module.exports = {
                     lasteasy: 0,
                     lastmulung: 0,
                     lastdagang: 0,
-                    lastbisnis: 0,
                     lastnebang: 0,
                     lastberkebon: 0,
                     lastadventure: 0,
-                    lastlawan: 0,
-                    lastlatih: 0,
                 }
-                let chat = db.data.chats[m.chat]
-                if (typeof chat !== 'object') db.data.chats[m.chat] = {}
+                let chat = global.db.data.chats[m.chat]
+                if (typeof chat !== 'object') global.db.data.chats[m.chat] = {}
                 if (chat) {
                     if (!('isBanned' in chat)) chat.isBanned = false
                     if (!('welcome' in chat)) chat.welcome = false
@@ -539,17 +531,16 @@ module.exports = {
                     if (!('sPromote' in chat)) chat.sPromote = ''
                     if (!('sDemote' in chat)) chat.sDemote = ''
                     if (!('delete' in chat)) chat.delete = true
+                    if (!('antispam' in chat)) chat.antispam = true
+                    if (!('autoread' in chat)) chat.autoread = true
                     if (!('antiLink' in chat)) chat.antiLink = false 
                     if (!('antiSticker' in chat)) chat.antiSticker = false
                     if (!('stiker' in chat)) chat.stiker = false
-                    if (!('simi' in chat)) chat.simi = false
-                    if (!('mute' in chat)) chat.mute = true 
-                    if (!('download' in chat)) chat.download = false 
                     if (!('viewonce' in chat)) chat.viewonce = false
                     if (!('useDocument' in chat)) chat.useDocument = false
                     if (!('antiToxic' in chat)) chat.antiToxic = false
                     if (!isNumber(chat.expired)) chat.expired = 0
-                } else db.data.chats[m.chat] = {
+                } else global.db.data.chats[m.chat] = {
                     isBanned: false,
                     welcome: false,
                     detect: false,
@@ -558,11 +549,10 @@ module.exports = {
                     sPromote: '',
                     sDemote: '',
                     delete: true,
+                    antispam: true,
+                    autoread: true,
                     antiLink: false,
                     stiker: false,
-                    simi: false,
-                    mute: true,
-                    download: false,
                     antiSticker: false,
                     viewonce: false,
                     useDocument: false,
@@ -572,13 +562,11 @@ module.exports = {
                 let settings = db.data.settings[this.user.jid]
                 if (typeof settings !== 'object') db.data.settings[this.user.jid] = {}
                 if (settings) {
-		            if (!'anticall' in settings) settings.anticall = true
-		            if (!'autoreset' in settings) settings.autoreset = true
-		            if (!isNumber(settings.autoresetTime)) settings.autoresetTime = (new Date() * 1) + 3600000 * 720
+		            if (!isNumber(settings.status)) settings.status = 0
+		            if (!'backup' in settings) settings.backup = false
+                    if (!isNumber(settings.backupDB)) settings.backupDB = 0
 		        } else db.data.settings[this.user.jid] = {
-		            anticall: true,
-		            autoreset: true,
-		            autoresetTime: (new Date() * 1) + 3600000 * 720,
+		            status: 0,
 		        }
             } catch (e) {
                 console.error(e)
@@ -593,9 +581,8 @@ module.exports = {
             const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number, isCreator, isDeveloper]) => number)].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
             const isOwner = isROwner || m.fromMe
             const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-            const isPrems = db.data.users[m.sender].premium
-            const isBans = db.data.users[m.sender].banned
-            const isCreated = db.data.users[m.sender].created
+            const isPrems = global.db.data.users[m.sender].premium
+            const isBans = global.db.data.users[m.sender].banned
 
             if (opts['queque'] && m.text && !(isMods || isPrems)) {
                 let queque = this.msgqueque, time = 1000 * 5
@@ -622,13 +609,11 @@ module.exports = {
             // }
 
             if (m.isBaileys) return 
-            if (m.chat.endsWith('broadcast') || m.key.remoteJid.endsWith('broadcast')) return // Supaya tidak merespon di status
-            let blockList = await conn.fetchBlocklist()
-            if (blockList?.includes(m.sender)) return
+            if (m.chat.endsWith('broadcast')) return
             m.exp += Math.ceil(Math.random() * 10)
 
             let usedPrefix
-            let _user = db.data && db.data.users && db.data.users[m.sender]
+            let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
             const groupMetadata = (m.isGroup ? (conn.chats[m.chat] || {}).metadata : {}) || {}
         //    const groupMetadata = (m.isGroup ? (conn.chats[m.chat].metadata || await conn.groupMetadata(m.chat)): {}) || {}
@@ -683,7 +668,6 @@ module.exports = {
                     isBotAdmin,
                     isPrems,
                     isBans,
-                    isCreated,
                     chatUpdate,
                 })) continue
                 if (typeof plugin !== 'function') continue
@@ -708,9 +692,9 @@ module.exports = {
 
                     if (!isAccept) continue
                     m.plugin = name
-                    if (m.chat in db.data.chats || m.sender in db.data.users) {
-                        let chat = db.data.chats[m.chat]
-                        let user = db.data.users[m.sender]
+                    if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
+                        let chat = global.db.data.chats[m.chat]
+                        let user = global.db.data.users[m.sender]
                         if (name != 'unbanchat.js' && chat && chat.isBanned) return // Except this
                         if (name != 'unbanuser.js' && user && user.banned) return
                     }
@@ -738,10 +722,6 @@ module.exports = {
                         fail('banned', m, this)
                         continue
                     }
-                    if (plugin.created && !isCreated) { // Created
-                         fail('created', m, this)
-                         continue
-                    }
                     if (plugin.group && !m.isGroup) { // Group Only
                         fail('group', m, this)
                         continue
@@ -764,7 +744,7 @@ module.exports = {
                     let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17 // XP Earning per command
                     if (xp > 9999999999999999999999) m.reply('Ngecit -_-') // Hehehe
                     else m.exp += xp
-                    if (!isPrems && plugin.limit && db.data.users[m.sender].limit < plugin.limit * 1) {
+                    if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
                      //   this.reply(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buy*`, m)
                         this.sendButton(m.chat, `Limit anda habis, silahkan beli melalui *${usedPrefix}buyall* atau *${usedPrefix}hadiah*`, author, null, [['Buy Limit', '/buyall'], ['Hadiah', '/hadiah']], m)
                         continue // Limit habis
@@ -793,7 +773,6 @@ module.exports = {
                         isBotAdmin,
                         isPrems,
                         isBans,
-                        isCreated,
                         chatUpdate,
                     }
                     try {
@@ -834,10 +813,10 @@ module.exports = {
                 const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
                 if (quequeIndex !== -1) this.msgqueque.splice(quequeIndex, 1)
             }
-            //console.log(db.data.users[m.sender])
-            let user, stats = db.data.stats
+            //console.log(global.db.data.users[m.sender])
+            let user, stats = global.db.data.stats
             if (m) {
-                if (m.sender && (user = db.data.users[m.sender])) {
+                if (m.sender && (user = global.db.data.users[m.sender])) {
                     user.exp += m.exp
                     user.limit -= m.limit * 1
                 }
@@ -867,37 +846,75 @@ module.exports = {
             }
 
              try {
-             require('./lib/print')(m, this)
+                 require('./lib/print')(m, this)
              } catch (e) {
                  console.log(m, m.quoted, e)
              }
-            if (opts['autoread']) await this.readMessages([m.key]) //this.chatRead(m.chat, m.isGroup ? m.sender : undefined, m.id || m.key.id).catch(() => { })
+            if (opts['autoread']) await this.readMessages([m.key])
         }
     },
     async participantsUpdate({ id, participants, action }) {
         if (opts['self']) return
         // if (id in conn.chats) return // First login will spam
         if (global.isInit) return
-        let chat = db.data.chats[id] || {}
+        let chat = global.db.data.chats[id] || {}
         let text = ''
         switch (action) {
             case 'add':
-            case 'remove':
-                if (chat.welcome) {
-                    let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
-                    for (let user of participants) {
-                        let pp = './src/avatar_contact.png'
-                        try {
-                            pp = await this.profilePictureUrl(user)
-                        } catch (e) {
-                        } finally {
-                            text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc.toString()) :
-                                (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
-                            this.sendFile(id, pp, 'pp.jpg', text, null, false, { mentions: [user] })
-                        }
+        case 'remove':
+            if (chat.welcome) {
+                let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
+                for (let user of participants) {
+                    let pp = 'https://telegra.ph/file/2d06f0936842064f6b3bb.png'
+                    try {
+                        pp = await this.profilePictureUrl(user, 'image')
+                    } catch (e) {
+                    } finally {
+                        text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknow') :
+                            (chat.sBye || this.bye || conn.bye || 'Bye @user')).replace(/@user/g, '@' + user.split`@`[0])
+                        let wel = API('males', '/welcome2', {
+                                profile: pp,
+                                username: await this.getName(user),
+                                background: 'https://telegra.ph/file/7f827ca45c833542777f0.jpg',
+                                groupname: await this.getName(id),
+                                membercount: groupMetadata.participants.length
+                            })
+                            let lea = API('males', '/goodbye2', {
+                                profile: pp,
+                                username: await this.getName(user),
+                                background: 'https://telegra.ph/file/7f827ca45c833542777f0.jpg',
+                                groupname: await this.getName(id),
+                                membercount: groupMetadata.participants.length
+                            })
+                            
+ /* conn.sendButtonDoc(id, wm, text, action == 'add' ? 'ᴡᴇʟᴄᴏᴍᴇ' : 'sᴀʏᴏɴᴀʀᴀᴀ', action === 'add' ? '.intro' : 'Aʟᴅɪ X Aɪsʏᴀʜ', fkontak, { contextInfo: { externalAdReply: { showAdAttribution: true,
+    mediaUrl: 'https://instagram/b4c00t4an_s3l3b',
+    mediaType: 2, 
+    description: sgc,
+    title: 'Hᴀʟᴏ Nɢᴀʙ',
+    body: wm,
+    thumbnail: await(await fetch(action === 'add' ? wel : lea)).buffer(),
+    sourceUrl: sgc
+     }}
+  })*/
+  let welcom = 'https://telegra.ph/file/35f17bb371d308504bc46.jpg'
+
+  let godbye = 'https://telegra.ph/file/b44e48066aed4fb7ad291.jpg'
+  conn.sendButtonImg(id, await(await fetch(action === 'add' ? wel : lea)).buffer(), 'Group Messege', text, action == 'add' ? 'ᴡᴇʟᴄᴏᴍᴇ' : 'sᴀʏᴏɴᴀʀᴀᴀ', action === 'add' ? '.intro' : 'Sachi', fkontak, { contextInfo: { externalAdReply: { showAdAttribution: true,
+    mediaUrl: 'https://www.instagram.com/yt.agungxx',
+    mediaType: 2, 
+    description: gc,
+    title: "Follow Ig Owner💕",
+    body: wm,
+    thumbnail: await(await fetch(action === 'add' ? welcom : godbye)).buffer(),
+    sourceUrl: gc
+     }}
+  })
+  
                     }
                 }
-                break
+            }
+            break
         case 'promote':
             text = (chat.sPromote || this.spromote || conn.spromote || '@user ```is now Admin```')
         case 'demote':
@@ -916,7 +933,7 @@ module.exports = {
             let chats = Object.entries(conn.chats).find(([_, data]) => data.messages?.[id])
             if (!chats) return
             let msg = chats instanceof String ? JSON.parse(chats[1].messages[id]) : chats[1].messages[id]
-            let chat = db.data.chats[msg.key.remoteJid] || {}
+            let chat = global.db.data.chats[msg.key.remoteJid] || {}
             if (chat.delete) return
             await this.reply(msg.key.remoteJid, `
 Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
@@ -931,29 +948,6 @@ Untuk mematikan fitur ini, ketik
         }
     }
 },
-
-conn.ws.on('CB:call', async function callUpdatePushToDb(json) {
-        let call = json.tag
-        let callerId = json.attrs.from
-        console.log({ call, callerId })
-        let users = db.data.users
-        let user = users[callerId] || {}
-        if (user.whitelist) return
-        if (!db.data.settings[conn.user.jid].anticall) return
-        switch (conn.callWhitelistMode) {
-          case 'mycontact':
-            if (callerId in conn.contacts && 'short' in conn.contacts[callerId])
-            return
-          break
-        }
-        const data = global.owner.filter(([id, isCreator]) => id && isCreator)
-        let sentMsg = await conn.reply(callerId, `Sistem otomatis block, jangan menelepon bot silahkan hubungi owner untuk dibuka!`)
-        await conn.sendContact(callerId, data.map(([id, name]) => [id, name]), sentMsg)
-        await conn.updateBlockStatus(callerId, 'block')
-        await conn.reply(owner[0]+'@s.whatsapp.net', `*NOTIF CALLER BOT!*\n\n@${callerId.split`@`[0]} telah menelpon *${conn.user.name}*\n\n ${callerId.split`@`[0]}\n`, null, { mentions: [callerId] })
-        conn.delay(10000) // supaya tidak spam
-    })
-
 /*
 conn.ws.on('CB:call', async (json) => {
     console.log(json.content)
@@ -967,7 +961,7 @@ conn.ws.on('CB:call', async (json) => {
     })*/
 /*async onCall(json) {
     let { from } = json[2][0][1]
-    let users = db.data.users
+    let users = global.db.data.users
     let user = users[from] || {}
     if (user.whitelist) return
     switch (this.callWhitelistMode) {
@@ -995,7 +989,6 @@ global.dfail = (type, m, conn) => {
         restrict: '*❕FITUR DI TOLAK❕*\n Restrict Belum Nyala !'
     }[type]
     if (msg) return m.reply(msg)
- 
 }
 
 let fs = require('fs')
