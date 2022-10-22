@@ -41,15 +41,15 @@ const PORT = process.env.PORT || 3000
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 global.prefix = new RegExp('^[' + (opts['prefix'] || 'â€ŽxzXZ/i!#$%+Â£Â¢â‚¬Â¥^Â°=Â¶âˆ†Ã—Ã·Ï€âˆšâœ“Â©Â®:;?&.\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
 
-/*
-global.db = new Low(
+
+/*global.db = new Low(
   /https?:\/\//.test(opts['db'] || '') ?
     new cloudDBAdapter(opts['db']) : /mongodb/i.test(opts['db']) ?
       new mongoDB(opts['db']) :
       new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`)
-)
-*/
-global.db = new Low(new mongoDB('mongodb+srv://agungxxx:AGUNG123@cluster0.ptitoa1.mongodb.net/?retryWrites=true&w=majority'))
+)*/
+
+global.db = new Low(new mongoDB('mongodb+srv://yakinf:arxcf23@cluster0.qpfsret.mongodb.net/?retryWrites=true&w=majority'))
 
 global.DATABASE = global.db // Backwards Compatibility
 global.loadDatabase = async function loadDatabase() {
@@ -167,8 +167,24 @@ global.reloadHandler = function (restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
 
-  conn.welcome = 'Hai, kak @user 👋\nSelamat datang di grup @subject 😅\nJangan lupa intro kak 😅\n\n*Nama:*\n*Umur:*\n*Askot:*\n\n*Deskripsi Grup:*\n\n@desc\n\nMade by ❤️' 
-  conn.bye = 'Selamat tinggal @user 👋'
+  let welc = `
+ ❖━━━[ *Welcome To Group* ]━━━❖
+┏––––––━━━━━━━━•
+│☘︎ @subject
+┣━━━━━━━━┅┅┅
+│( 👋 Hallo @user
+├[ *ɪɴᴛʀᴏ* ]—
+│ *ɴᴀᴍᴀ:* 
+│ *ᴜᴍᴜʀ:* 
+│ *ɢᴇɴᴅᴇʀ:*
+┗–––━━┅┅┅
+
+–––┅┅ *ᴅᴇsᴄʀɪᴘᴛɪᴏɴ* ┅┅––––––
+@desc`
+
+  let lef = 
+`❖━━━[ *Selamat Tinggal* ]━━━❖
+𝚂𝚊𝚢𝚘𝚗𝚊𝚛𝚊𝚊 *@user* 👋😃`
   conn.spromote = '@user sekarang admin!'
   conn.sdemote = '@user sekarang bukan admin!'
   conn.handler = handler.handler.bind(conn)
