@@ -2,9 +2,10 @@ let fs = require('fs')
 let chalk = require('chalk')
 
 global.owner = [
-  ['6287719424487'],
-  ['6285790613290'],
-  ['6287719424487', 'Owner', true]
+  ['6281390413987'],
+  ['14044228888'],
+  ['6283871581215'],
+  ['6281390413987', 'Owner', true]
   // [number, dia creator/owner?, dia developer?]
 ] // Put your number here
 global.mods = [] // Want some help?
@@ -62,11 +63,8 @@ global.packname = sticker_name
 global.author = sticker_author
 global.wm = '© Sachi Bot Whatsapp ♡︎'
 global.wait = '_*𝐬𝐞𝐝𝐚𝐧𝐠 𝐝𝐢 𝐩𝐫𝐨𝐬𝐞𝐬 ...*_'
-global.cewe ='https://telegra.ph/file/ff31af4f1c7b5cda7022e.jpg'
-global.pp = 'https://telegra.ph/file/b5a05c394479627d89a95.jpg'
-global.indo = 'https://telegra.ph/file/f7bcf9eeb565683800cf7.jpg'
 global.instagram = 'https://instagram.com/yt.agungxx'
-global.gc = 'https://chat.whatsapp.com/Gv3TXFpZSJSH6msPeqZQw3'
+global.gc = 'https://chat.whatsapp.com/EcmGKqFV3Ur9EKwfS3Tmjp'
 global.multiplier = 1000 // The higher, The harder levelup
 
 global.rpg = {
