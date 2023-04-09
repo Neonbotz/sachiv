@@ -8,7 +8,7 @@ handler.all = async function (m) {
 	if (new Date() * 1 - setting.status > 1000) {
 		let _uptime = process.uptime() * 1000
 		let uptime = clockString(_uptime);
-		const ultah = new Date('April 2, 2023 23:59:59')
+		const ultah = new Date('April 2, 2024 23:59:59')
     const sekarat = new Date().getTime() 
     const Kurang = ultah - sekarat
     const ohari = Math.floor( Kurang / (1000 * 60 * 60 * 24));
