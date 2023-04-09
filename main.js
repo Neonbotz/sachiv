@@ -49,7 +49,7 @@ global.prefix = new RegExp('^[' + (opts['prefix'] || 'â€ŽxzXZ/i!#$%+Â£Â¢
       new JSONFile(`${opts._[0] ? opts._[0] + '_' : ''}database.json`)
 )*/
 
-global.db = new Low(new mongoDB('mongodb+srv://yakinf:arxcf23@cluster0.qpfsret.mongodb.net/?retryWrites=true&w=majority'))
+global.db = new Low(new mongoDB('mongodb+srv://neonajah09:AGUNGRS234@neon.2q4sctn.mongodb.net/?retryWrites=true&w=majority'))
 
 global.DATABASE = global.db // Backwards Compatibility
 global.loadDatabase = async function loadDatabase() {
